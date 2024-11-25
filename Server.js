@@ -40,61 +40,60 @@ app.listen(PORT, () => {
 });
 
 
-
 // Route to retrieve all patients
 app.get('/patients', (req, res) => {
-  const query = 'SELECT patient_id, first_name, last_name, date_of_birth FROM patients';
+  const sql = 'SELECT patient_id, first_name, last_name, date_of_birth FROM patients';
   
-  db.query(query, (err, results) => {
+  db.query(sql, (err, results) =>{
     if (err) {
-      console.error('Error fetching patients:', err.message);
-      res.status(500).send('Error fetching patients');
-      return;
+      return res.status(500).send(err);
+    
     }
-    res.json(results);  // Return the results as JSON
-  });
-});
+    res.json(results); 
+
+  })
+})
 
 // Route to retrieve all providers
 app.get('/providers', (req, res) => {
-  const query = 'SELECT first_name, last_name, provider_specialty FROM providers';
-  
-  db.query(query, (err, results) => {
+  const sql = 'SELECT provider_id, first_name, last_name, provider_specialty FROM providers';
+
+  db.query(sql, (err, results) =>{
     if (err) {
       console.error('Error fetching providers:', err.message);
-      res.status(500).send('Error fetching providers');
-      return;
+      return res.status(500).send(err);
     }
-    res.json(results);  // Return the results as JSON
+
+    res.json(results);
   });
 });
+
 
 // Route to retrieve patients by first name
 app.get('/patients/:first_name', (req, res) => {
   const firstName = req.params.first_name;
-  const query = 'SELECT patient_id, first_name, last_name, date_of_birth FROM patients WHERE first_name = ?';
+  const sql = 'SELECT patient_id, first_name, last_name, date_of_birth FROM patients WHERE first_name = ?';
   
-  db.query(query, [firstName], (err, results) => {
+  db.query(sql, [firstName], (err, results) => {
     if (err) {
       console.error('Error fetching patients by first name:', err.message);
       res.status(500).send('Error fetching patients');
       return;
     }
-    res.json(results);  // Return the results as JSON
+    res.json(results);  
   });
 });
 
 // Route to retrieve providers by specialty
-app.get('/providers/specialty/:specialty', (req, res) => {
+app.get('/providers/specialty/:specialty', (req, res) =>{
   const specialty = req.params.specialty;
-  const query = 'SELECT first_name, last_name, provider_specialty FROM providers WHERE provider_specialty = ?';
+  const sql = 'SELECT first_name, last_name, provider_specialty FROM providers WHERE provider_specialty = ?';
   
-  db.query(query, [specialty], (err, results) => {
-    if (err) {
-      console.error('Error fetching providers by specialty:', err.message);
-      res.status(500).send('Error fetching providers');
-      return;
+  db.query(sql, [specialty], (err, results) =>{
+    if (err){
+      return res.status(500).send(err);
     }
-    res.json(results);  // Return the results as JSON
+    res.json(results); 
   });
 });
+
